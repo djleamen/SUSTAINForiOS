@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "builds": [
-    { "src": "api/chatbot.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/api/chatbot", "dest": "/api/chatbot.js" }
-  ]
-}
