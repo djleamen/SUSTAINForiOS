@@ -109,7 +109,8 @@ struct ContentView: View {
 //                .resizable()
 //                .scaledToFill()
 //                .ignoresSafeArea() // Extend to full screen
-//            
+//
+        
             // Chat Interface
             VStack {
                 ScrollView {

@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
+import os
 
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-//    FirebaseApp.configure()
 
     return true
   }
@@ -18,9 +18,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct SUSTAINForiOSApp: App {
-    // register app delegate for Firebase setup
-//    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    init() { }
+    // Configure logging
+    private let logger = Logger(subsystem: "com.sustain", category: "Logging")
+    
+    init() {
+        startLogging() // Start logging
+    }
+    
+    func startLogging() {
+        logger.info("SUSTAINForiOS app started")
+    }
 
     var body: some Scene {
         WindowGroup {
