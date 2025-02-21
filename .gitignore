@@ -93,3 +93,4 @@ Podfile.lock
 # ⚡ macOS System Files
 *.DS_Store
 *.AppleDouble
+/images
