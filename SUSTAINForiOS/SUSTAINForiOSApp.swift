@@ -8,21 +8,12 @@
 import SwiftUI
 import os
 
-class AppDelegate: NSObject, UIApplicationDelegate {
-  func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-
-    return true
-  }
-}
-
 @main
 struct SUSTAINForiOSApp: App {
-    // Configure logging
     private let logger = Logger(subsystem: "com.sustain", category: "Logging")
-    
+
     init() {
-        startLogging() // Start logging
+        startLogging()
     }
     
     func startLogging() {
@@ -32,7 +23,7 @@ struct SUSTAINForiOSApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                ContentView()
+                ContentView()  // ✅ Uses ContentView
             }
         }
     }
