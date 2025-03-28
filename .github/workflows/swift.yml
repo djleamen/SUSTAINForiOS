@@ -6,22 +6,24 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '34 13 * * 5'
+    - cron: '0 0 * * 0'
 
 jobs:
-  analyze:
-    name: Analyze
+  build:
     runs-on: macos-latest
+
+    strategy:
+      matrix:
+        xcode: [12.4, 13.2.1, 14.0.1]  # Specify compatible Xcode versions
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+    - name: Set up Xcode ${{ matrix.xcode }}
+      uses: maxim-lobanov/setup-xcode@v1
       with:
-        languages: swift
+        xcode-version: ${{ matrix.xcode }}
 
-    - name: Build Swift project
-      run: |
-        xcodebuild -scheme SUSTAINForiOS
+    - name: Build and test
+      run: xcodebuild -project SUSTAINForiOS.xcodeproj -scheme SUSTAINForiOS -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.4' build test
