@@ -10,7 +10,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     strategy:
       fail-fast: false
@@ -22,7 +22,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Initialize the CodeQL tools
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
 
@@ -33,7 +33,7 @@ jobs:
     
     - name: Build Swift project
       run: |
-        xcodebuild clean build -project YourProject.xcodeproj -scheme YourScheme -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.4'
+        xcodebuild clean build -project SUSTAINForiOS.xcodeproj -scheme SUSTAINForiOS -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.4'
         
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
