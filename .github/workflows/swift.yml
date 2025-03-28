@@ -1,21 +1,27 @@
-name: Build Swift Project
+name: CodeQL
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '34 13 * * 5'
 
 jobs:
-  build:
+  analyze:
+    name: Analyze
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-    - name: Set up Xcode
-      run: sudo xcode-select -s /Applications/Xcode_15.2.app  # adjust Xcode version if needed
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: swift
 
-    - name: Build with xcodebuild
+    - name: Build Swift project
       run: |
-        xcodebuild -scheme YourAppSchemeName -sdk iphoneos -configuration Release build
+        xcodebuild -scheme SUSTAINForiOS
