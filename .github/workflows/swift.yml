@@ -37,7 +37,7 @@ jobs:
 
       - name: Build Swift project
         run: |
-          xcodebuild clean build -scheme YourSchemeName -destination 'platform=iOS Simulator,name=iPhone 14'
+          xcodebuild clean build -scheme SUSTAINForiOS -destination 'platform=iOS Simulator,name=iPhone 14'
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
