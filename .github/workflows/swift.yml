@@ -2,45 +2,32 @@ name: CodeQL Analysis
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
   schedule:
     - cron: '0 0 * * 0'
 
 jobs:
   analyze:
-    name: Analyze (Swift)
-    runs-on: macos-latest
-
+    name: Analyze
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'swift' ]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: swift
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        config: .github/codeql/codeql-config.yml
 
-      - name: List available Xcode versions
-        run: ls /Applications/
-
-      - name: Select Xcode version
-        run: |
-          AVAILABLE_XCODE=$(ls /Applications/ | grep -E 'Xcode_[0-9]+\.[0-9]+\.app' | sort -r | head -n 1)
-          if [ -z "$AVAILABLE_XCODE" ]; then
-            echo "No Xcode version found."
-            exit 1
-          fi
-          echo "Found Xcode version: $AVAILABLE_XCODE"
-          sudo xcode-select -s /Applications/$AVAILABLE_XCODE/Contents/Developer
-
-      - name: Build Swift project
-        run: |
-          xcodebuild clean build -scheme SUSTAINForiOS -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max'
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          upload-database: true
-          wait-for-processing: true
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: '/language:${{ matrix.language }}'
