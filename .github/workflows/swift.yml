@@ -1,3 +1,11 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
   build:
     runs-on: macos-latest
@@ -14,5 +22,3 @@ jobs:
           fi
           echo "Found Xcode version: $AVAILABLE_XCODE"
           sudo xcode-select -s /Applications/$AVAILABLE_XCODE/Contents/Developer
-
-      # Other steps in your job
