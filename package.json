@@ -4,8 +4,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2"
-  }
-  , "scripts": {
-    "postinstall": "npm install"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250819.0"
   }
 }

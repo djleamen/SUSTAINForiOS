@@ -11,14 +11,14 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-// export default {
-// 	async fetch(request, env, ctx): Promise<Response> {
-// 		return new Response('Hello World!');
-// 	},
-// } satisfies ExportedHandler<Env>;
+/// <reference types="@cloudflare/workers-types" />
+
+interface Env {
+	OPENAI_API_KEY: string;
+}
 
 export default {
-	async fetch(request, env) {
+	async fetch(request: Request, env: Env): Promise<Response> {
 	  try {
 		// Allow only POST requests
 		if (request.method !== "POST") {
@@ -28,19 +28,19 @@ export default {
 		  );
 		}
   
-		// Parse incoming request
-		let requestData;
-		try {
-		  requestData = await request.json();
-		} catch (error) {
-		  return new Response(
-			JSON.stringify({ error: "Invalid JSON format." }),
-			{ status: 400, headers: { "Content-Type": "application/json" } }
-		  );
-		}
-  
-		// Validate request body
-		if (!requestData.messages || !Array.isArray(requestData.messages)) {
+	// Parse incoming request
+	let requestData: any;
+	try {
+  		requestData = await request.json();
+	} catch (error: unknown) {
+  		console.error('JSON parsing error:', error);
+  		return new Response(JSON.stringify({ error: "Invalid JSON format." }),
+		{ status: 400, headers: { "Content-Type": "application/json" } }
+  		);
+	}
+
+	// Validate request body
+	if (!requestData.messages || !Array.isArray(requestData.messages)) {
 		  return new Response(
 			JSON.stringify({ error: "Invalid request format. 'messages' must be an array." }),
 			{ status: 400, headers: { "Content-Type": "application/json" } }
@@ -71,13 +71,14 @@ export default {
 		  status: 200,
 		  headers: { "Content-Type": "application/json" }
 		});
-  
-	  } catch (error) {
+	  } catch (error: unknown) {
+		console.error('Server error:', error);
+		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 		return new Response(
-		  JSON.stringify({ error: "Internal Server Error", details: error.message }),
+		  JSON.stringify({ error: "Internal Server Error", details: errorMessage }),
 		  { status: 500, headers: { "Content-Type": "application/json" } }
 		);
 	  }
 	}
-  };
+};
   
