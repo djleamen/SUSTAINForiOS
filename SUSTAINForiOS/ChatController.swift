@@ -14,11 +14,14 @@ class ChatController: ObservableObject {
     let apiURL = "https://my-chatbot.sustain-for-ios.workers.dev"
 
     func sendNewMessage(content: String) {
-        let userMessage = Message(content: content, isUser: true)
+        let trimmed = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        let userMessage = Message(content: trimmed, isUser: true)
         DispatchQueue.main.async {
             self.messages.append(userMessage)
         }
-        getBotReply(from: content)
+        getBotReply(from: trimmed)
     }
     
     private func getBotReply(from message: String) {
@@ -41,14 +44,18 @@ class ChatController: ObservableObject {
             return
         }
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+
             if let error = error {
                 print("❌ Request failed: \(error.localizedDescription)")
+                self.appendBotMessage("Sorry, the request failed. Please check your connection and try again.")
                 return
             }
 
             guard let data = data else {
                 print("❌ No response data")
+                self.appendBotMessage("Sorry, no response was received. Please try again.")
                 return
             }
 
@@ -63,8 +70,15 @@ class ChatController: ObservableObject {
                 }
             } catch {
                 print("❌ Failed to decode response: \(error)")
+                self.appendBotMessage("Sorry, something went wrong reading the response. Please try again.")
             }
         }.resume()
+    }
+
+    private func appendBotMessage(_ content: String) {
+        DispatchQueue.main.async {
+            self.messages.append(Message(content: content, isUser: false))
+        }
     }
 }
 
